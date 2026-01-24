@@ -7,7 +7,7 @@ It does not serve as an exploit collection or a personal learning diary.
 
 - Background: IT operations, systems and network administration  
 - Focus: offensive security with an emphasis on systems, not single exploits  
-- Working style: sequence- and chain-oriented operations, reproducible documentation, exam-ready reporting [web:1][web:26]
+- Working style: sequence- and chain-oriented operations, reproducible documentation, exam-ready reporting
 
 The goal of this repository is to capture the reasoning and decision architecture behind offensive work.  
 It documents why specific steps are taken and in which order, not which tools were used.
@@ -28,7 +28,7 @@ If you are looking for ready-made commands or cheat sheets, this is the wrong pl
 This repository is intended to provide:
 
 - formalised thinking structures for offensive campaigns  
-- reproducible workflows for exam scenarios and internal red-team style exercises [web:1][web:26]  
+- reproducible workflows for exam scenarios and internal red-team style exercises  
 - a clean separation between raw material (`labs/`) and refined output (`reports/`)  
 - a systematic link between technical method, human factors, and defensive translation
 
@@ -53,7 +53,7 @@ There are no generic “misc” or “playground” areas.
 All content is intended for authorised use only, including:
 
 - internal red teaming and purple team exercises  
-- certification labs and exams under valid terms of service [web:1][web:22]  
+- certification labs and exams under valid terms of service
 - research and structured threat modelling
 
 It must not be used for:
