@@ -18,7 +18,7 @@ the path of least resistance.
 What matters is not *who* decides, but *under which conditions*
 reliably secure decisions emerge.
 
-## Defensive Scope
+## Defensive Scope and Design Objective
 
 Psychological risk in security does not originate from “weak users”.  
 It emerges when environments push people toward fast, overloaded,
@@ -33,7 +33,7 @@ This repository looks at how to:
 - identify where cognitive overload and structural misalignment
   systematically generate errors
 
-In this defensive reading, the objective is the opposite of exploitation:
+In this defensive reading,the objective is the structural prevention of exploitability:
 we tune parameters so that the system *prevents* the error by itself.
 
 ## Structural Perspective for Defense
@@ -130,6 +130,9 @@ obedience over escalation, and silence over reporting.
 Defensive psychology aims to structurally reverse exactly these conditions.
 
 ---
+
+The following sources provide academic and industry perspectives that informed the defensive translation presented in this repository.
+
 
 ## Sources / Further Reading
 
