@@ -16,10 +16,8 @@ My Template (battle-tested):
 
 Status: Closed | Severity: High | Verdict: TP | Assignee: L2
 Comment: [Timeline/Indicators/Analysis/Actions/Escalation Reason]
-............................................................................
 Example (Phishing):
 "09:12 UTC REPORT.rar delivered – SPF Fail. TP. Escalate: Malware analysis."
-
 
 2. Alert Escalation
 Trigger: TPs requiring deeper analysis (malware, lateral movement).
