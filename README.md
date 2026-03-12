@@ -69,3 +69,7 @@ If no defensive control, process change, or training pattern can be derived, it 
 
 The target readers are practitioners who evaluate reasoning, structure, and reproducibility rather than titles.  
 The repository assumes familiarity with offensive security fundamentals and does not aim to be beginner-friendly documentation.
+
+
+# ⚠ Work in progress – this repository evolves alongside ongoing training and lab work.
+Methodology and meta-framework are defined first; practical labs and reports are added incrementally.
