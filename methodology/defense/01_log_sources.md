@@ -17,24 +17,28 @@ Log sources are grouped by their **observation layer**.
 Each layer covers different attack phases and techniques.
 
 ### 1.1 Endpoint Telemetry
+
 **What:** Process/file/registry/network activity on endpoints.  
 **Value:** Visibility into code execution, persistence, credential abuse, lateral movement.  
 **Sources:** EDR agents (Sysmon, Defender, CrowdStrike), OS events (Windows Security, Linux Audit).  
 **Blind Spot:** Headless/cloud workloads without agents.
 
 ### 1.2 Network Telemetry
+
 **What:** Communication between systems (IP, port, protocol, payload metadata).  
 **Value:** Visibility into initial access, C2, exfiltration, scanning.  
 **Sources:** NetFlow, proxy logs, DNS, firewall/IDS, NDR.  
 **Blind Spot:** Encrypted traffic without inspection or metadata strategy.
 
 ### 1.3 Identity Telemetry
+
 **What:** Authentication, permissions, group memberships.  
 **Value:** Visibility into privilege escalation, credential theft, account abuse.  
 **Sources:** AD audit logs, Kerberos events, IAM logs (Azure AD, Okta), VPN logins.  
 **Blind Spot:** Service accounts, token abuse, pass-the-hash without correlation.
 
 ### 1.4 Cloud / Control Plane Telemetry
+
 **What:** API calls, IAM changes, storage access, compute events.  
 **Value:** Visibility into cloud-native attacks, misconfigurations, lateral movement.  
 **Sources:** CloudTrail (AWS), Azure Monitor, GCP audit logs, Kubernetes audit logs.  
@@ -64,18 +68,21 @@ Not all logs have the same value.
 Prioritisation follows **signal/noise ratio**, **coverage gap** and **correlation depth**.
 
 ### Priority 1 – Essential
+
 - Windows Security Logs (4624/4625/4672/4673)
 - Sysmon or equivalent endpoint process telemetry
 - proxy/DNS logs
 - AD audit logs
 
 ### Priority 2 – High Value
+
 - firewall/NetFlow
 - EDR behavioural logs
 - CloudTrail/IAM logs
 - VPN and MFA events
 
 ### Priority 3 – Supplementary
+
 - application logs
 - WAF logs
 - mobile device logs
@@ -88,20 +95,24 @@ Prioritisation follows **signal/noise ratio**, **coverage gap** and **correlatio
 The largest blind spots in log coverage:
 
 ### 4.1 Missing Endpoint Visibility
+
 - IoT/OT devices without agents
 - legacy Windows systems without Sysmon
 - headless servers without EDR
 
 ### 4.2 Encrypted Traffic
+
 - HTTPS without proxy inspection
 - TLS C2 without metadata analysis
 
 ### 4.3 Identity Blind Spots
+
 - service accounts without audit
 - token abuse without host correlation
 - pass-the-hash without network correlation
 
 ### 4.4 Cloud Misconfigurations
+
 - serverless without logging
 - IAM changes without alerting
 - audit trails only partially enabled
@@ -114,20 +125,22 @@ Log sources are the input for the following pipeline:
 
 ```text
 Log Sources → Normalization → Correlation → Alert Patterns → Triage / Escalation
+```
 
-
-## Detection quality therefore depends not only on the source itself, but also on how that source is processed.
+Detection quality therefore depends not only on the source itself, but also on how that source is processed.
 
 - Without normalization, sources collapse into isolated events
 - Without correlation, visibility remains fragmented
 - Without retention, the timeline breaks
 - Without context, even good telemetry remains operationally weak
 
-01_log_sources.md therefore does not end with the question of what is collected.
+`01_log_sources.md` therefore does not end with the question of what is collected.  
 It leads directly to the question of how durable patterns emerge from it.
 
+---
 
 ## 6. Boundary of This Chapter
+
 This chapter does not cover:
 
 - concrete Sigma rules
@@ -135,14 +148,15 @@ This chapter does not cover:
 - SIEM onboarding processes
 - product-specific parsers
 
-Those follow later from the structure.
-01_log_sources.md defines the visibility base, not the finished detection.
+Those follow later from the structure.  
+`01_log_sources.md` defines the **visibility base**, not the finished detection.
+
+---
 
 ## Key Principle
-Log sources are not merely technical inputs.
+
+Log sources are not merely technical inputs.  
 They define the boundaries of what a defensive system is capable of knowing.
 
-Detection quality is therefore already constrained before alerting begins.
+Detection quality is therefore already constrained before alerting begins.  
 A weak visibility layer cannot later be repaired by better rules alone.
-
-undefined
