@@ -1,153 +1,233 @@
-# Praxis – Actual Execution (Real Scenario)
+# Praxis – Recon Execution (Real Scenario_thm)
 
 ## Initial Situation
 
-Target: `futurevera.thm`
+**Target:** `futurevera.thm`
 
-The lab environment did not provide public DNS resolution.  
-At the same time, the system was mid-upgrade, which caused two practical constraints:
+**Constraints:**
+- System upgrade in progress
+- SecLists not available
+- Package installation blocked
 
-- SecLists were not available
-- package installation was blocked
+The originally planned full wordlist-based enumeration could not be executed.
 
-This forced a deviation from the planned workflow.
+**Decision:** Do not wait. Adapt the method to the environment.
+
+## Notes
+
+**MACHINE_IP** is used as a placeholder for the actual IP address of the target machine assigned in the lab environment.  
+It is kept in the commands to make the workflow reusable and easier to document.  
+Before execution, replace `MACHINE_IP` with the real target IP if required.
+
+**XXXX** indicates a redacted or variable part of the discovered hostname.  
+It is used here intentionally to avoid hardcoding or disclosing the full value in the write-up.  
+During the actual attack path, this segment must be taken exactly as observed in the certificate output.
 
 ---
 
-## Step 1 – DNS Baseline
+## Step 1 – Local DNS Baseline
 
-The first step was to establish local name resolution.
+Before any HTTP-based interaction, the domain must resolve locally.
 
-Command used:
-
+```bash
 echo "MACHINE_IP futurevera.thm" | sudo tee -a /etc/hosts
+```
 
-Result:
+**Result:**
+- Browser and CLI tools can route requests
+- HTTP layer becomes reachable
 
-The domain could now be resolved locally.  
-Without this step, no HTTP-based interaction would have been possible.
+> Without this step, all further actions fail at name resolution.
 
 ---
 
 ## Step 2 – Adapting to Constraints
 
-The original plan was to use a large wordlist for VHost enumeration.
+A full-scale enumeration using large wordlists (e.g. SecLists) was not possible.
+Instead of treating this as a blocker, the approach was reduced to a controlled heuristic method.
 
-This was not possible due to missing SecLists and blocked installation.
-
-Decision:
-
-Instead of stopping, a reduced manual candidate list was created.
-
-This was not a fallback in terms of logic, only in terms of scale.
+**Goal:**
+- Generate initial signals
+- Establish observable behavior
+- Enable comparison
 
 ---
 
-## Step 3 – Manual Candidate List
+## Step 3 – Manual Candidate List (Heuristic Enumeration)
 
-A small heuristic list was used:
+A small, manually defined list of common subdomain patterns was created:
 
-www, dev, test, admin, portal, blog, support, api, staging
+```
+www
+dev
+test
+admin
+portal
+blog
+support
+api
+staging
+```
 
-Goal:
+### Why These Names
 
-Cover common naming patterns quickly to generate initial signals.
+These are not random guesses. They are derived from common real-world infrastructure patterns:
+
+| Candidate | Rationale |
+|-----------|-----------|
+| `www` | Default web entrypoint |
+| `dev`, `test`, `staging` | Development environments often exposed unintentionally |
+| `admin`, `portal` | Internal or administrative interfaces |
+| `api` | Backend communication endpoints |
+| `blog`, `support` | Frequently separated applications |
+
+> Organizations tend to reuse predictable naming conventions across environments.
+
+### Technical Principle
+
+This step does **NOT** rely on DNS resolution. It relies on **HTTP routing behavior**:
+- All requests are sent to the same IP
+- The `Host` header determines which application is served
+
+**Meaning:** Even if a subdomain does not exist in DNS, the backend can still respond if the `Host` header matches a configured VHost.
+
+### Objective
+
+The goal is **NOT** full discovery. The goal is:
+- Establish a baseline response
+- Generate comparable samples
+- Detect deviations
+
+This step creates the **first signal layer** for further analysis.
+
+### Expected Outcome
+
+One of two situations:
+
+1. **All responses behave identically** → indicates generic fallback behavior
+2. **One or more responses differ** in size, structure, or response pattern → indicates a **valid VHost candidate**
+
+### Decision Logic
+
+Relevance is determined by **deviation** — not by:
+- Status code alone
+- Number of responses
+
+But by:
+- Observable difference compared to baseline
 
 ---
 
 ## Step 4 – VHost Enumeration
 
-Enumeration was performed via Host header manipulation using ffuf.
+```bash
+ffuf -u https://MACHINE_IP \
+     -w vhosts.txt \
+     -H "Host: FUZZ.futurevera.thm"
+```
 
-Observation:
+**Observation:** All responses returned HTTP `200` — no differentiation via status code.
 
-All responses returned HTTP status 200.
-
-Interpretation:
-
-Status code alone was not usable as a signal in this scenario.
-
----
-
-## Step 5 – Behavioral Analysis
-
-Since status codes were uniform, analysis shifted to response behavior.
-
-Focus:
-
-- response size
-- consistency across requests
-
-Result:
-
-Most candidates produced identical responses.  
-One exception was observed:
-
-blog showed a clear deviation.
-
-Decision:
-
-blog.futurevera.thm was treated as a valid VHost candidate.
-
-This decision was based on behavior, not on tool output.
+**Conclusion:** Status code alone is **not** a reliable signal.
 
 ---
 
-## Step 6 – Verification
+## Step 5 – Behavioral Analysis (Critical Step)
 
-The identified host was mapped locally.
+Responses were compared based on:
+- Response size
+- Consistency
 
+**Result:** Most candidates produced identical responses — `blog` showed a **clear deviation**.
+
+**Interpretation:** `blog` is not part of the generic fallback behavior.
+
+---
+
+## Step 6 – Validation of Candidate
+
+```bash
 echo "MACHINE_IP blog.futurevera.thm" | sudo tee -a /etc/hosts
+```
 
-Result:
+**Result:**
+- Access confirmed
+- Separate application context identified
 
-Access confirmed.
-
-This indicated that blog was served as a separate application context.
+> At this point: A valid VHost entry point exists.
 
 ---
 
 ## Step 7 – TLS Certificate Analysis
 
-The next step was to extract certificate information from the validated host.
+```bash
+openssl s_client -connect blog.futurevera.thm:443 </dev/null 2>/dev/null \
+  | openssl x509 -noout -text \
+  | grep DNS:
+```
 
-openssl s_client -connect blog.futurevera.thm:443 | openssl x509 -noout -text | grep DNS
+**Result:**
+```
+DNS:support.futurevera.thm
+DNS:secrethelpdeskXXXX.support.futurevera.thm
+```
 
-Result:
+### Why This Works
 
-The certificate revealed additional hostnames via SAN entries:
+During the TLS handshake:
+- The server presents its certificate
+- The certificate contains **SAN entries**
+- SAN entries list **configured hostnames**
 
-- support.futurevera.thm
-- secrethelpdeskXXXX.support.futurevera.thm
+> This is not guessing. This is **extracting configuration data**.
 
-Interpretation:
+### Why This Step Only Works Now
 
-These hostnames were part of the real configuration but not visible through enumeration.
+Earlier attempts failed because:
+- No valid VHost context existed
+- Certificate could not be mapped correctly
+- Wrong entry point
+
+Now: **valid VHost → correct certificate → usable data**
 
 ---
 
 ## Step 8 – Final Verification
 
-The hidden hostname was added to the hosts file.
-
+```bash
 echo "MACHINE_IP secrethelpdeskXXXX.support.futurevera.thm" | sudo tee -a /etc/hosts
+```
 
-Result:
-
-The application became accessible via browser.  
-The flag was retrieved.
+**Browser access:** Hidden application is served — **flag is visible.**
 
 ---
 
-## Actual Analysis Path
+## Final Analysis Path
 
-The decisive sequence was:
+```
+constrained environment
+  → heuristic candidate generation
+    → uniform responses observed
+      → deviation identified (blog)
+        → VHost validated
+          → certificate extracted
+            → hidden hostname revealed
+              → access achieved
+```
 
-Response deviation  
-→ hypothesis  
-→ validation  
-→ certificate extraction  
-→ hidden hostname  
-→ access
+---
 
-This path is reproducible and independent of specific tooling.
+## Core Insight
+
+Enumeration alone did not reveal the target.
+
+The decisive factor was:
+
+> **Response deviation → Certificate analysis → Hidden host discovery**
+
+---
+
+## Key Learning
+
+> Same status code does **NOT** mean same behavior.
+> Only **deviation** creates signal.
