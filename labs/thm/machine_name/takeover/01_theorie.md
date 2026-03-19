@@ -4,7 +4,7 @@
 
 This document explains the technical foundations of the reconnaissance phase for the target `futurevera.thm`.
 
-The focus is not on tools as an end in themselves, but on the mechanisms that make recon possible in this lab context:
+The focus is not on tools as an end in themselves, but on the mechanisms that make reconnaissance possible in this lab context:
 - local name resolution
 - HTTP-based virtual host logic
 - response comparison
@@ -50,7 +50,8 @@ It is part of reproducibility.
 
 DNS determines where traffic is sent.
 
-On Linux systems, host resolution is typically controlled through `/etc/nsswitch.conf`; for `hosts`, a lookup order such as `files dns` is common, which causes local files to be checked before DNS. [web:71][web:84]
+On Linux systems, host resolution is typically controlled through `/etc/nsswitch.conf`.  
+For hosts, a lookup order such as `files dns` is common, which causes local files to be checked before DNS.
 
 In isolated lab environments, internal names such as `futurevera.thm` often do not exist in public or centrally managed DNS.  
 Without local mapping, the client cannot translate the target name into an IP address.
@@ -72,9 +73,9 @@ echo "MACHINE_IP futurevera.thm" | sudo tee -a /etc/hosts
 ### Why this matters
 
 This entry does not replace DNS in general.  
-It takes precedence in the local resolution order for this specific hostname before DNS is queried, provided DNS remains part of the configured lookup chain. [web:71][web:84]
+It takes precedence in the local resolution order for this specific hostname before DNS is queried, provided DNS remains part of the configured lookup chain.
 
-DNS therefore continues to function for other names. [web:71][web:84]
+DNS therefore continues to function for other names.
 
 For the later analysis, the critical point is not **where** name resolution comes from,  
 but that `futurevera.thm` resolves deterministically to the correct target IP on the attacking system.
@@ -123,7 +124,7 @@ A host can therefore be relevant at the application layer even if it does not re
 
 ## Signal, not status code
 
-A common mistake in web recon is to treat HTTP status codes as equivalent to usable findings.
+A common mistake in web reconnaissance is to treat HTTP status codes as equivalent to usable findings.
 
 A shared status code does not mean that the same application was served.  
 A server can respond with `200 OK` to many different hostnames while still returning different content or separate application contexts.
@@ -142,9 +143,9 @@ A signal exists only where observable deviation appears.
 
 ---
 
-## Execution variants
+## Execution Variants
 
-This recon model can be applied in several ways.
+This reconnaissance model can be applied in several ways.
 
 ### 1. Structured approach
 
@@ -179,9 +180,9 @@ It does not replace validation.
 The certificate-driven approach uses TLS not only for transport encryption, but also as an information source.
 
 During the TLS handshake, the server presents a certificate.  
-Useful hostnames may appear there primarily in SAN entries, and in older or lab-style configurations the Common Name may still carry additional hint value. [web:76][web:82][web:83]
+Useful hostnames may appear there primarily in SAN entries, and in older or lab-style configurations the Common Name may still carry additional hint value.
 
-For hostname matching, SAN is treated as the primary source today, while use of the Common Name for that purpose is deprecated under RFC 2818. [web:76][web:79]
+For hostname matching, SAN is treated as the primary source today, while use of the Common Name is deprecated.
 
 As a result, certificate analysis can:
 - confirm existing assumptions
@@ -221,7 +222,7 @@ Certificates are not a side detail in this model.
 Once a valid VHost or useful HTTPS endpoint has been identified, the certificate may expose information that was not visible at the HTTP layer before.
 
 The technical reason is simple:  
-The certificate reveals which hostnames the TLS context is configured to serve; today this information primarily appears in SAN entries and, in older or lab-like configurations, sometimes additionally in the CN. [web:76][web:79][web:82][web:83]
+The certificate reveals which hostnames the TLS context is configured to serve.
 
 This creates a second information channel alongside classic enumeration:
 - HTTP provides behavioral signals
@@ -231,22 +232,22 @@ Only the combination of both turns an assumption into a reliable analysis path.
 
 ---
 
-## Theoretical core
+## Theoretical Core
 
 This chapter is built on four assumptions:
 
-1. Without local name resolution, web-based recon in this type of lab is not reliable.
+1. Without local name resolution, web-based reconnaissance in this type of lab is not reliable.
 2. Multiple applications may exist behind the same target IP.
 3. The `Host` header may expose different application contexts.
 4. Certificates may reveal additional hostnames that wordlist guessing alone does not immediately expose.
 
 The consequence is direct:  
-Recon in this scenario is not blind guessing of names.  
+Reconnaissance in this scenario is not blind guessing of names.  
 It is the controlled comparison of technical reactions to deliberately varied requests.
 
 ---
 
-## Transition to practice
+## Transition to Practice
 
 The practical phase starts exactly here.
 

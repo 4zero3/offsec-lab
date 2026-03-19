@@ -134,7 +134,7 @@ ffuf -u https://MACHINE_IP \
 
 ## Step 5 – Behavioral Analysis (Critical Step)
 
-Responses were compared based on:
+Responses were compared based on observable characteristics:
 - Response size
 - Consistency
 
