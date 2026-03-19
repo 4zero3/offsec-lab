@@ -2,78 +2,78 @@
 
 ## Validated Hostnames
 
-- blog.futurevera.thm
-- support.futurevera.thm
-- secrethelpdeskXXXX.support.futurevera.thm
+The following hostnames were validated during the reconnaissance process:
+
+- `blog.futurevera.thm`
+- `support.futurevera.thm`
+- `secrethelpdeskXXXX.support.futurevera.thm`
+
+These hostnames did not emerge from a single enumeration step.  
+They were identified across different stages of analysis and confirmed through direct technical validation.
 
 ---
 
 ## Key Finding
 
-A relevant portion of the attack surface was not discoverable through wordlist-based enumeration.
+A relevant part of the exposed attack surface was not discoverable through initial wordlist-based enumeration alone.
 
-It was exposed through TLS certificate metadata.
-
----
-
-## Technical Breakdown
-
-The environment showed the following characteristics:
-
-- multiple virtual hosts shared a single IP address
-- HTTP responses were intentionally uniform
-- status codes did not differentiate between valid and invalid hosts
-- certificate SAN entries exposed additional infrastructure
+It became visible only after a valid response deviation was identified and the corresponding TLS certificate was inspected.
 
 ---
 
-## Root Cause
+## Confirmed Technical Findings
 
-The exposure resulted from a combination of factors:
+The following conditions were confirmed during execution:
 
-- shared infrastructure without strict separation
-- generic response behavior masking internal structure
-- certificates containing additional hostnames
-- lack of alignment between visible and actual assets
+- multiple virtual host contexts were served behind a shared IP address
+- HTTP status codes alone did not distinguish meaningful targets
+- most tested hostnames produced uniform fallback-like behavior
+- `blog.futurevera.thm` showed a clear behavioral deviation
+- certificate data exposed additional hostnames beyond the initial candidate set
 
----
-
-## Signal Analysis
-
-Different types of signals were observed and evaluated:
-
-Status Code  
-→ weak signal, not reliable in isolation
-
-Response Similarity  
-→ indicates noise or default behavior
-
-Response Deviation  
-→ primary indicator of valid targets
-
-Certificate Data  
-→ high-value source of real configuration data
+These findings show that visibility at the HTTP layer was incomplete without secondary analysis.
 
 ---
 
-## Critical Insight
+## Signal Evaluation
 
-The breakthrough did not come from enumeration itself.
+Not all observed signals had the same evidential value.
 
-It came from interpreting deviations in behavior and validating them through TLS data.
+- **Status code** → weak signal; useful for context, not for reliable differentiation
+- **Response similarity** → indicator of generic or fallback behavior
+- **Response deviation** → primary indicator of a potentially valid VHost
+- **Certificate data** → high-value configuration evidence tied to real hostnames
+
+The decisive factor was not that responses existed, but that one response deviated in a meaningful way.
 
 ---
 
-## Conclusion
+## Analytical Outcome
 
-Enumeration alone was insufficient to reveal the full structure.
+The breakthrough did not come from enumeration volume alone.
+
+It came from a chained interpretation model:
+- observe uniform behavior
+- identify deviation
+- validate the deviating host
+- inspect the certificate
+- derive the hidden hostname
+- verify access
+
+This changed the process from heuristic probing into evidence-based discovery.
+
+---
+
+## Result Significance
+
+Enumeration alone was insufficient to reveal the full structure of the exposed application surface.
 
 Only the combination of:
+- behavioral comparison
+- targeted validation
+- certificate inspection
 
-- behavioral analysis  
-- hypothesis-driven validation  
-- certificate inspection  
+made the hidden host visible.
 
-made the hidden attack surface visible.
-
-The key factor was not tool execution, but correct interpretation of system behavior.
+The key result is therefore not only that additional hostnames existed.  
+The key result is that correct interpretation of system behavior produced the actual discovery signal.
