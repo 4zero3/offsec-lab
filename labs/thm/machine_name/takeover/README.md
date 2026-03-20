@@ -75,3 +75,41 @@ Applicable to:
 - internal exposure assessment under limited tooling
 
 The room matters here not because it was solved, but because it exposed a reusable decision pattern.
+
+---
+
+## Media Structure & Deep Dive
+
+This lab does not follow a traditional "screenshot dump" approach, but instead presents a clearly guided analysis.
+
+The contents of the `/media` folder are intentionally divided into two layers:
+
+### Core Analysis
+
+The numbered folders (`01–06`) contain only the key moments of the analysis:
+- Establishing a baseline
+- Identifying uniform responses
+- First deviation
+- Clear signal (deviation)
+- Pivoting to a new layer (TLS)
+- Visual thinking model (mind map)
+
+The focus here is not on activity, but on **interpretation and signal detection**.
+
+### Raw Material
+
+The `/raw` folder contains supplementary content:
+- Additional screenshots (intermediate steps)
+- Complete request flow
+- German-language explanatory video
+
+These serve as an optional deep dive for anyone who wants to fully trace the process.
+
+### Purpose of This Structure
+
+Not every response is a signal.
+
+This lab deliberately shows only the points at which the system's behavior changes measurably —  
+because that is exactly where real analysis begins.
+
+---
