@@ -37,13 +37,10 @@ The objective is not to maximise volume, but to increase precision.
 ## Repository Layout
 
 - `philosophy/` – threat-model-based framing, systems instead of isolated targets  
-- `methodology/` – attack flow, enumeration logic, privilege escalation logic  
-- `labs/` – raw data, enumeration output, hypotheses, dead ends  
-- `reports/` – concise, reproducible, exam-ready reports  
-- `tooling/` – minimal helper tools written for understanding, not for show  
-- `research/` – deep dives into specific vulnerability classes and patterns  
-- `psychology/` – targeting and human factors as a formal attack surface  
-- `meta/` – discipline, study planning, personal constraints
+- `methodology/` – offensive and defensive decision logic, operational reasoning, and reusable workflow structure  
+- `labs/` – raw material, room-specific notes, applied observations, and hands-on operational fragments  
+- `psychology/` – human factors, decision architecture, and defensive translation of exploitability under pressure  
+- `meta/` – discipline, study planning, personal rules, and operational constraints  
 
 Each directory exists for a specific operational purpose.  
 There are no generic “misc” or “playground” areas.
@@ -73,3 +70,8 @@ The repository assumes familiarity with offensive security fundamentals and does
 
 # ⚠ Work in progress – this repository evolves alongside ongoing training and lab work.
 Methodology and meta-framework are defined first; practical labs and reports are added incrementally.
+
+## Current Status
+
+- `labs/htb/` – ⚠ reserved, not meaningfully populated yet
+- `methodology/` – ⚠ still evolving

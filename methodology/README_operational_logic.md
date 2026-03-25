@@ -94,7 +94,7 @@ If it explains **why decisions were taken and how they become reproducible**, it
 * `philosophy/` – abstract thinking models
 * `psychology/` – human decision and context factors
 * `labs/` – raw observations, tests and dead ends
-* `reports/` – condensed and reproducible results
+* `case_studies/` – condensed and reproducible results
 
 This makes `methodology/` the layer in which **observation becomes durable structure**.
 
