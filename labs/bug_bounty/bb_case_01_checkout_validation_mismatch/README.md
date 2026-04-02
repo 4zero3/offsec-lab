@@ -22,6 +22,7 @@ The tested platform did not enforce address consistency uniformly across the obs
 A contradictory address state could be:
 
 - introduced through normal interaction
+- remain usable within the workflow
 - displayed in checkout preview
 - carried through order completion
 - persisted in final order data
@@ -30,7 +31,7 @@ This makes the issue stronger than a frontend validation artifact.
 
 The relevant path is:
 
-**introduced → propagated → persisted**
+**introduced → accepted → propagated → persisted**
 
 ---
 

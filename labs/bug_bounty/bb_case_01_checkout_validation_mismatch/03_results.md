@@ -20,7 +20,7 @@ It was:
 
 The strongest validated conclusion is:
 
-> inconsistent country/address state can survive the transition from address editing to final stored order data
+> inconsistent billing-related address state can survive from address handling into final stored order data
 
 This conclusion is not derived from a single observation.
 

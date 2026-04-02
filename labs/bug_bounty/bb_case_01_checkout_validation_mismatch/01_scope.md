@@ -9,12 +9,7 @@ The objective was not broad exploration of a platform.
 
 The objective was narrower:
 
-> Determine whether one logically consistent address state is enforced across:
-> - address input
-> - invoice update
-> - checkout preview
-> - order creation
-> - persisted order detail
+> Determine whether one logically consistent address state is enforced across checkout-relevant workflow stages.
 
 ---
 
@@ -84,9 +79,7 @@ The practically relevant surface for this case included:
 - finish / order completion flow
 - order overview / order detail display
 
-A particularly important workflow transition was the point where contradictory state stopped being a local form anomaly and became accepted application state.
-
-> This transition became central because it marked the move from visible inconsistency to workflow-relevant state.
+These areas were relevant because they define where address state is entered, carried forward, and later reflected back to the user.
 
 ---
 
@@ -97,9 +90,8 @@ This case would only count as meaningful if the contradiction could be shown to 
 The internal success condition was therefore:
 
 - contradictory address state introduced
-- accepted by backend-supported workflow
-- visible in checkout preview
-- order created successfully
+- contradiction remains visible beyond the initial form state
+- workflow continues without restoring consistency
 - inconsistent state persisted in final order record
 
 Anything less would remain ambiguous.

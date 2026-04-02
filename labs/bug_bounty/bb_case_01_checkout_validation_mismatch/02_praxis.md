@@ -45,18 +45,18 @@ At this point, the case remained ambiguous.
 
 ---
 
-## Step 2 – Workflow Continuation
+## Step 2 – Accepted Workflow State
 
-The workflow was continued without correcting the contradictory state.
+The contradictory state was not treated as a local form artifact only.
 
 Observed behavior:
 
 - the state remained usable within the workflow
-- no immediate consistency boundary stopped progression
+- no decisive consistency boundary stopped progression at this stage
 
 Interpretation:
 
-> UI validation does not define final acceptance
+> visible validation does not define final acceptance
 
 ---
 
@@ -109,7 +109,7 @@ Interpretation:
 
 inconsistent input  
 → UI detects issue  
-→ workflow continues  
+→ accepted workflow state remains usable  
 → preview reflects contradiction  
 → completion succeeds  
 → persisted state remains inconsistent
