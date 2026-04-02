@@ -1,120 +1,131 @@
-# Scope – Address Consistency Failure (Real Scenario_bug_bounty)
+# Praxis – Address Consistency Execution (Real Scenario_bug_bounty)
 
 ## Initial Situation
 
 **Target Type:** authenticated e-commerce checkout workflow  
 **Target:** private bug bounty target redacted
 
-The objective was not broad exploration of a platform.
+The case did not begin with a confirmed finding.
 
-The objective was narrower:
+It began with one operational question:
 
-> Determine whether one logically consistent address state is enforced across:
-> - address input
-> - invoice update
-> - checkout preview
-> - order creation
-> - persisted order detail
+> Does contradictory address state remain local to the form, or does it survive workflow transitions?
 
 ---
 
-## Investigation Focus
+## Execution Logic
 
-The case focused on the following areas:
+The investigation followed a controlled path:
 
-- delivery address handling
-- invoice address handling
-- country / city / postcode / street consistency
-- checkout preview state
-- order persistence after successful flow completion
+- introduce contradictory address state
+- observe frontend behavior
+- continue the workflow
+- check whether the state is rejected, propagated, or persisted
 
-The central question was not whether the frontend shows an error.
+The focus was not on isolated responses.
 
-The central question was:
-
-> Does contradictory address state get rejected, normalized, or accepted by the system?
+The focus was on state continuity across workflow steps.
 
 ---
 
-## Constraints
+## Step 1 – UI Baseline
 
-The investigation stayed inside a normal authenticated user context.
+A contradictory country/address combination was introduced.
 
-The following were **not** part of the tested scope:
+Observed behavior:
 
-- account takeover
-- cross-user access
-- payment fraud or price manipulation
-- privilege escalation
-- destructive automation
-- large-scale fuzzing
+- frontend validation error triggered
+- mismatch between country and address components indicated
 
-All observations were derived from:
+Interpretation:
 
-- normal browsing
-- controlled checkout interaction
-- traffic inspection
-- validation of observed workflow behavior
-- confirmation through visible workflow transitions
+> the system detects inconsistency at UI level
+
+At this point, the case remained ambiguous.
 
 ---
 
-## Working Assumption
+## Step 2 – Workflow Continuation
 
-At the beginning, there were two plausible interpretations:
+The workflow was continued without correcting the contradictory state.
 
-1. the issue is only a frontend validation artifact
-2. the system accepts contradictory address state beyond the UI layer
+Observed behavior:
 
-The case was built to distinguish between these two possibilities.
+- the state remained usable within the workflow
+- no immediate consistency boundary stopped progression
 
-That distinction mattered because a UI error alone is weak.
+Interpretation:
 
-A persisted contradiction across backend-supported transitions is not.
-
----
-
-## Target Surface
-
-The practically relevant surface for this case included:
-
-- checkout address forms
-- invoice address editing path
-- checkout preview
-- finish / order completion flow
-- order overview / order detail display
-
-A particularly important backend-supported transition was an **invoice address update path**.
-
-This transition became central because it represented the movement from typed input into accepted application state.
+> UI validation does not define final acceptance
 
 ---
 
-## Success Condition
+## Step 3 – Preview Behavior
 
-This case would only count as meaningful if the contradiction could be shown to move through multiple layers.
+The checkout preview was reached with the contradictory state still present.
 
-The internal success condition was therefore:
+Observed behavior:
 
-- contradictory address state introduced
-- accepted by backend-supported workflow
-- visible in checkout preview
-- order created successfully
-- inconsistent state persisted in final order record
+- contradictory invoice / delivery representation visible
+- no normalization applied before preview
 
-Anything less would remain ambiguous.
+Interpretation:
+
+> the workflow carries forward contradictory state
 
 ---
 
-## Final Scope Statement
+## Step 4 – Completion Path
 
-This entry documents a business-logic validation issue concerning address consistency.
+The workflow continued through checkout completion.
 
-It does **not** identify the target publicly.
+Observed behavior:
 
-It documents one concrete black-box path where:
+- no blocking condition triggered
+- the flow reached its final state
 
-- validation was fragmented
-- contradictory state was accepted
-- checkout transitions continued
-- final business data preserved the inconsistency
+Interpretation:
+
+> no decisive consistency enforcement exists before completion
+
+---
+
+## Step 5 – Persistence Check
+
+The resulting order state was reviewed after completion.
+
+Observed behavior:
+
+- contradictory address data appeared in the stored order view
+- the contradiction persisted beyond workflow execution
+
+Interpretation:
+
+> the system accepts contradiction as persisted state
+
+---
+
+## Execution Path Summary
+
+inconsistent input  
+→ UI detects issue  
+→ workflow continues  
+→ preview reflects contradiction  
+→ completion succeeds  
+→ persisted state remains inconsistent
+
+---
+
+## Core Observation
+
+The decisive factor was not detection.
+
+The decisive factor was:
+
+> the system did not enforce consistency at any persistence-relevant boundary
+
+---
+
+## Key Learning
+
+> A validation signal has no value if it is not enforced across workflow transitions.
