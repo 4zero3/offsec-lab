@@ -5,27 +5,28 @@
 **Target Type:** authenticated e-commerce checkout workflow  
 **Target:** private bug bounty target redacted
 
-The objective was not broad exploration of a platform.
+The objective was narrow.
 
-The objective was narrower:
+The case did not attempt broad exploration of the platform.
+It asked one question:
 
-> Determine whether one logically consistent address state is enforced across checkout-relevant workflow stages.
+> Is one logically consistent address state enforced across address input, invoice update, checkout preview, order creation, and persisted order detail?
 
 ---
 
 ## Investigation Focus
 
-The case focused on the following areas:
+The workflow was examined across these points:
 
 - delivery address handling
 - invoice address handling
 - country / city / postcode / street consistency
 - checkout preview state
-- order persistence after successful flow completion
+- order persistence after successful completion
 
-The central question was not whether the frontend shows an error.
+The core question was not whether the frontend shows an error.
 
-The central question was:
+The core question was:
 
 > Does contradictory address state get rejected, normalized, or accepted by the system?
 
@@ -33,9 +34,9 @@ The central question was:
 
 ## Constraints
 
-The investigation stayed inside a normal authenticated user context.
+The investigation stayed within a normal authenticated user context.
 
-The following were **not** part of the tested scope:
+Not tested:
 
 - account takeover
 - cross-user access
@@ -44,7 +45,7 @@ The following were **not** part of the tested scope:
 - destructive automation
 - large-scale fuzzing
 
-All observations were derived from:
+Observations were derived from:
 
 - normal browsing
 - controlled checkout interaction
@@ -56,43 +57,27 @@ All observations were derived from:
 
 ## Working Assumption
 
-At the beginning, there were two plausible interpretations:
+At the beginning, two interpretations were plausible:
 
-1. the issue is only a frontend validation artifact
-2. the system accepts contradictory address state beyond the UI layer
+1. the issue is only a frontend validation artifact.
+2. the system accepts contradictory address state beyond the UI layer.
 
 The case was built to distinguish between these two possibilities.
 
-That distinction mattered because a UI error alone is weak.
-
-A persisted contradiction across workflow transitions is not.
-
----
-
-## Target Surface
-
-The practically relevant surface for this case included:
-
-- checkout address forms
-- invoice address editing behavior
-- checkout preview
-- finish / order completion flow
-- order overview / order detail display
-
-These areas were relevant because they define where address state is entered, carried forward, and later reflected back to the user.
+A UI error alone is weak.
+A contradiction that survives workflow transitions is not.
 
 ---
 
 ## Success Condition
 
-This case would only count as meaningful if the contradiction could be shown to move through multiple layers.
-
-The internal success condition was therefore:
+The case was only meaningful if the contradiction moved through multiple layers:
 
 - contradictory address state introduced
-- contradiction remains visible beyond the initial form state
-- workflow continues without restoring consistency
-- inconsistent state persisted in final order record
+- accepted by a backend-supported workflow
+- visible in checkout preview
+- order created successfully
+- inconsistent state persisted in the final order record
 
 Anything less would remain ambiguous.
 
@@ -102,11 +87,11 @@ Anything less would remain ambiguous.
 
 This entry documents a business-logic validation issue concerning address consistency.
 
-It does **not** identify the target publicly.
+It does not identify the target publicly.
 
 It documents one concrete black-box path where:
 
 - validation was fragmented
 - contradictory state was accepted
-- checkout transitions continued
+- checkout continued
 - final business data preserved the inconsistency

@@ -33,30 +33,26 @@ The focus was on state continuity across workflow steps.
 A contradictory country/address combination was introduced.
 
 Observed behavior:
-
 - frontend validation error triggered
 - mismatch between country and address components indicated
 
 Interpretation:
-
-> the system detects inconsistency at UI level
+- the system detects inconsistency at UI level
 
 At this point, the case remained ambiguous.
 
 ---
 
-## Step 2 – Accepted Workflow State
+## Step 2 – Workflow Continuation
 
-The contradictory state was not treated as a local form artifact only.
+The workflow was continued without correcting the contradictory state.
 
 Observed behavior:
-
 - the state remained usable within the workflow
-- no decisive consistency boundary stopped progression at this stage
+- no immediate consistency boundary stopped progression
 
 Interpretation:
-
-> visible validation does not define final acceptance
+- UI validation does not define final acceptance
 
 ---
 
@@ -65,13 +61,11 @@ Interpretation:
 The checkout preview was reached with the contradictory state still present.
 
 Observed behavior:
-
 - contradictory invoice / delivery representation visible
 - no normalization applied before preview
 
 Interpretation:
-
-> the workflow carries forward contradictory state
+- the workflow carries forward contradictory state
 
 ---
 
@@ -80,13 +74,11 @@ Interpretation:
 The workflow continued through checkout completion.
 
 Observed behavior:
-
 - no blocking condition triggered
 - the flow reached its final state
 
 Interpretation:
-
-> no decisive consistency enforcement exists before completion
+- no decisive consistency enforcement exists before completion
 
 ---
 
@@ -95,13 +87,11 @@ Interpretation:
 The resulting order state was reviewed after completion.
 
 Observed behavior:
-
 - contradictory address data appeared in the stored order view
 - the contradiction persisted beyond workflow execution
 
 Interpretation:
-
-> the system accepts contradiction as persisted state
+- the system accepts contradiction as persisted state
 
 ---
 
@@ -109,7 +99,7 @@ Interpretation:
 
 inconsistent input  
 → UI detects issue  
-→ accepted workflow state remains usable  
+→ workflow continues  
 → preview reflects contradiction  
 → completion succeeds  
 → persisted state remains inconsistent
@@ -123,9 +113,3 @@ The decisive factor was not detection.
 The decisive factor was:
 
 > the system did not enforce consistency at any persistence-relevant boundary
-
----
-
-## Key Learning
-
-> A validation signal has no value if it is not enforced across workflow transitions.

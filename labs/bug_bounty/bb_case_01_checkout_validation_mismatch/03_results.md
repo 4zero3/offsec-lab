@@ -2,12 +2,11 @@
 
 ## Final Result
 
-The case produced a clear and coherent result:
+The case produced one clear result:
 
 > The system did not enforce one authoritative address consistency state across the observed workflow.
 
 Contradictory address data was not only accepted temporarily.
-
 It was:
 
 - accepted
@@ -20,7 +19,7 @@ It was:
 
 The strongest validated conclusion is:
 
-> inconsistent billing-related address state can survive from address handling into final stored order data
+> inconsistent country/address state can survive the transition from address editing to final stored order data
 
 This conclusion is not derived from a single observation.
 
@@ -39,8 +38,7 @@ Observed behavior:
 - generic address validation errors
 
 This confirms:
-
-> the system has defined expectations for address consistency
+- the system has defined expectations for address consistency
 
 ---
 
@@ -53,8 +51,7 @@ Observed behavior:
 - inconsistent data accepted as valid state
 
 Interpretation:
-
-> validation is not centralized or authoritative
+- validation is not centralized or authoritative
 
 ---
 
@@ -67,8 +64,7 @@ Observed states:
 - inconsistent invoice vs. delivery representation
 
 Interpretation:
-
-> preview does not normalize or reject inconsistent state
+- preview does not normalize or reject inconsistent state
 
 ---
 
@@ -77,36 +73,19 @@ Interpretation:
 The checkout flow continued successfully.
 
 Interpretation:
-
-> no final consistency enforcement exists before order creation
+- no final consistency enforcement exists before order creation
 
 ---
 
 ### 5. Persistence Confirms the Failure
 
 The inconsistent state was visible in:
-
 - order overview
 - order detail
 - stored billing and delivery data
 
 Interpretation:
-
-> contradiction is not transient — it becomes persisted business data
-
----
-
-## System Behavior Model
-
-The observed behavior suggests a fragmented validation model:
-
-- UI performs validation
-- backend accepts conflicting state
-- preview displays conflicting state
-- checkout completes successfully
-- persistence stores the conflicting state
-
-This indicates the absence of a single authoritative validation boundary.
+- contradiction is not transient — it becomes persisted business data
 
 ---
 
@@ -141,21 +120,3 @@ The decisive observation is not the presence of validation.
 The decisive observation is:
 
 > validation is not respected once the state enters backend-supported workflow transitions
-
----
-
-## Core Insight
-
-The decisive factor was not the form error.
-
-The decisive factor was:
-
-> backend acceptance → workflow continuation → persistence
-
----
-
-## Key Learning
-
-> A validation error only matters if the system enforces it at persistence boundaries.
-
-In this case, it did not.

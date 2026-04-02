@@ -12,7 +12,7 @@ It was solved by following one contradiction through the full workflow.
 
 - detect contradiction
 - test backend acceptance
-- observe workflow continuation
+- test workflow propagation
 - verify persistence
 
 > Only the full chain produces a valid result.
